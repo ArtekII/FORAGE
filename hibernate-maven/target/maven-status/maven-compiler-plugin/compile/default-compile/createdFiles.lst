@@ -1,9 +1,1 @@
-com/example/App.class
-dao/JpaDAO.class
-dao/InterfaceDAO.class
-map/Scanner.class
 main/Main.class
-dao/JpaDAO$TxWork.class
-dao/UtilDAO.class
-map/Mapping.class
-dao/GenericDAO.class

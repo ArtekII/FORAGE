@@ -31,7 +31,7 @@ public class StatusDemande {
     @Column(name = "date_status", nullable = false, updatable = false)
     private LocalDateTime dateStatus;
 
-    protected StatusDemande() {}
+    public StatusDemande() {}
 
     public StatusDemande(Demande demande, Status status) {
         this.demande = demande;

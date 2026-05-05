@@ -14,24 +14,32 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nom_status", nullable = false, unique = true)
-    private String nomStatus;
+    @Column(name = "libelle", nullable = false, unique = true)
+    private String libelle;
 
     protected Status() {}
 
-    public Status(String nomStatus) {
-        this.nomStatus = nomStatus;
+    public Status(String libelle) {
+        this.libelle = libelle;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getNomStatus() {
-        return nomStatus;
+    public String getLibelle() {
+        return libelle;
     }
 
-    public void setNomStatus(String nomStatus) {
-        this.nomStatus = nomStatus;
+    public void setLibelle(String libelle) {
+        this.libelle = libelle;
+    }
+
+    public String getNomStatus() {
+        return libelle;
+    }
+
+    public void setNomStatus(String libelle) {
+        this.libelle = libelle;
     }
 }

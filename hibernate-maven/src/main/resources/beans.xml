@@ -15,18 +15,6 @@
 
     <context:annotation-config/>
 
-    <bean id="db_bean" class="dao.UtilDAO">
-        <property name="url" value="jdbc:mysql://localhost"/>
-        <property name="user" value="root"/>
-        <property name="password" value=""/>
-        <property name="port" value="3306"/>
-        <property name="database" value="spring"/>
-    </bean>
-
-    <bean id="generic_dao_bean" class="dao.GenericDAO">
-        <property name="utils" ref="db_bean"/>
-    </bean>
-
     <bean id="entityManagerFactory" class="jakarta.persistence.Persistence" factory-method="createEntityManagerFactory">
         <constructor-arg value="defaultPU"/>
     </bean>

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../hibernate-maven" && pwd)"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/hibernate-maven" && pwd)"
 WAR_NAME="hibernate-maven-1.0-SNAPSHOT.war"
 WAR_PATH="$PROJECT_DIR/target/$WAR_NAME"
 DEPLOY_DIR="/home/itu/tomcat/tomcat/webapps"
-DEPLOY_NAME="forage.war"
+DEPLOY_NAME="Gestion_Forage.war"
 BUILD_BEFORE_DEPLOY="true"
 
 if [[ "$BUILD_BEFORE_DEPLOY" == "true" ]]; then

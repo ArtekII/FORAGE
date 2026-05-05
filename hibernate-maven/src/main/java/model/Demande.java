@@ -2,9 +2,12 @@ package model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
@@ -22,40 +25,34 @@ public class Demande {
     @Column(nullable = false, unique = true, updatable = false)
     private String reference;
 
-    @Column(name = "nom_client", nullable = false)
-    private String nomClient;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
 
     @Column(name = "date_demande", nullable = false, updatable = false)
     private LocalDateTime dateDemande;
 
     @Column(nullable = false)
-    private String region;
-    @Column(nullable = false)
-    private String district;
-    @Column(nullable = false)
-    private String commune;
-    @Column(nullable = false)
-    private String fokontany;
+    private String lieu;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "commune_id", nullable = false)
+    private Commune commune;
 
     protected Demande() {}
 
-    public Demande(String nomClient, String region, String district, String commune, String fokontany) {
-        this.nomClient = nomClient;
-        this.region = region;
-        this.district = district;
+    public Demande(Client client, String lieu, Commune commune) {
+        this.client = client;
+        this.lieu = lieu;
         this.commune = commune;
-        this.fokontany = fokontany;
     }
 
-    public Demande(String reference, String nomClient, LocalDateTime dateDemande,
-            String region, String district, String commune, String fokontany) {
+    public Demande(String reference, Client client, LocalDateTime dateDemande, String lieu, Commune commune) {
         this.reference = reference;
-        this.nomClient = nomClient;
+        this.client = client;
         this.dateDemande = dateDemande;
-        this.region = region;
-        this.district = district;
+        this.lieu = lieu;
         this.commune = commune;
-        this.fokontany = fokontany;
     }
 
     @PrePersist
@@ -82,32 +79,24 @@ public class Demande {
         return reference;
     }
 
-    public String getNomClient() {
-        return nomClient;
+    public Client getClient() {
+        return client;
     }
 
     public LocalDateTime getDateDemande() {
         return dateDemande;
     }
 
-    public String getCommune() {
+    public String getLieu() {
+        return lieu;
+    }
+
+    public Commune getCommune() {
         return commune;
     }
 
-    public String getDistrict() {
-        return district;
-    }
-
-    public String getFokontany() {
-        return fokontany;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setNomClient(String nomClient) {
-        this.nomClient = nomClient;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public void setReference(String reference) {
@@ -118,19 +107,11 @@ public class Demande {
         this.dateDemande = dateDemande;
     }
 
-    public void setCommune(String commune) {
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
+    }
+
+    public void setCommune(Commune commune) {
         this.commune = commune;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public void setFokontany(String fokontany) {
-        this.fokontany = fokontany;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
     }
 }
