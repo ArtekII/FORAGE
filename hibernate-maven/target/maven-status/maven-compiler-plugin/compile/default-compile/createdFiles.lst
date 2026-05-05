@@ -1,15 +1,9 @@
 com/example/App.class
 dao/JpaDAO.class
 dao/InterfaceDAO.class
-repository/CompteBancaireRepository.class
-model/CompteBancaire.class
 map/Scanner.class
-repository/ChequeRepository.class
 main/Main.class
-repository/ClientRepository.class
 dao/JpaDAO$TxWork.class
 dao/UtilDAO.class
 map/Mapping.class
 dao/GenericDAO.class
-model/Cheque.class
-model/Client.class
