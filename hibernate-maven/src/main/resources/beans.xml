@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:annotation-config/>
+
+    <bean id="db_bean" class="dao.UtilDAO">
+        <property name="url" value="jdbc:mysql://localhost"/>
+        <property name="user" value="root"/>
+        <property name="password" value=""/>
+        <property name="port" value="3306"/>
+        <property name="database" value="spring"/>
+    </bean>
+
+    <bean id="generic_dao_bean" class="dao.GenericDAO">
+        <property name="utils" ref="db_bean"/>
+    </bean>
+
+    <bean id="entityManagerFactory" class="jakarta.persistence.Persistence" factory-method="createEntityManagerFactory">
+        <constructor-arg value="defaultPU"/>
+    </bean>
+
+    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager"/>
+
+    <bean id="jpa_dao_bean" class="dao.JpaDAO">
+        <property name="entityManager" ref="entityManager"/>
+    </bean>
+
+    <jpa:repositories base-package="repository" entity-manager-factory-ref="entityManagerFactory"/>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>
