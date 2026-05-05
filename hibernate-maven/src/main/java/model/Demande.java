@@ -39,7 +39,7 @@ public class Demande {
     @JoinColumn(name = "commune_id", nullable = false)
     private Commune commune;
 
-    protected Demande() {}
+    public Demande() {}
 
     public Demande(Client client, String lieu, Commune commune) {
         this.client = client;
@@ -65,7 +65,7 @@ public class Demande {
         }
     }
 
-    private String generateReference() {
+    public String generateReference() {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String random = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         return "DEM-" + timestamp + "-" + random;

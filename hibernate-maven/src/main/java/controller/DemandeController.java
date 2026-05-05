@@ -1,21 +1,30 @@
 package controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import java.util.List;
+
 import model.Demande;
+import service.ClientService;
+import service.CommuneService;
+import service.DemandeService;
 
 @Controller
 @RequestMapping("/demandes")
 public class DemandeController {
-    
-    private final service.DemandeService demandeService;
 
-    public DemandeController(service.DemandeService demandeService) {
+    private final DemandeService demandeService;
+    private final CommuneService communeService;
+    private final ClientService clientService;
+
+    public DemandeController(DemandeService demandeService, CommuneService communeService, ClientService clientService) {
         this.demandeService = demandeService;
+        this.communeService = communeService;
+        this.clientService = clientService;
     }
 
     @GetMapping
@@ -29,18 +38,19 @@ public class DemandeController {
     @GetMapping("/create")
     public ModelAndView createDemandeForm() {
         ModelAndView mav = new ModelAndView("demandes/create");
-        // Ajouter les objets nécessaires pour le formulaire de création
-        // mav.addObject("demande", new Demande());
-        // String reference = generateReference(); // Méthode pour générer une référence unique (existe dans le modele demande)
-        // mav.addObject("reference", reference);
+        List<model.Client> clients = clientService.getClients();
+        List<model.Commune> communes = communeService.getAllCommunes();
+
+        String references = new Demande().generateReference();
+        mav.addObject("references", references);
+
+        mav.addObject("clients", clients);
+        mav.addObject("communes", communes);
         return mav;
     }
 
     @PostMapping("/create")
-    public String createDemande(/* @ModelAttribute Demande demande */) {
-        // Traiter la création de la demande
-        // demandeService.createDemande(demande);
-        // Ajout d'un status_demande pour cet demande et le status "demande_creer"
+    public String createDemande() {
         return "redirect:/demandes";
     }
 }

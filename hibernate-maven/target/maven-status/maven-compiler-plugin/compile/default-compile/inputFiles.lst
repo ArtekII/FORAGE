@@ -9,6 +9,7 @@
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/RegionRepository.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/DemandeService.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/ClientRepository.java
+/home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/CommuneService.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Demande.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Client.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/main/Main.java
@@ -16,3 +17,4 @@
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Status.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/DemandeRepository.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/controller/HomeController.java
+/home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/ClientService.java

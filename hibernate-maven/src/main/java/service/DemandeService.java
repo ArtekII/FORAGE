@@ -1,6 +1,7 @@
 package service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,32 +15,36 @@ import repository.StatusRepository;
 
 @Service
 public class DemandeService {
-    
+
     private final DemandeRepository demandeRepository;
     private final StatusDemandeRepository statusDemandeRepository;
     private final StatusRepository statusRepository;
-    private final String STATUS_DEMANDE_CREATE = "demande_creer";
+    private static final String STATUS_DEMANDE_CREATE = "demande_creer";
 
     public DemandeService(
-        DemandeRepository demandeRepository, 
-        StatusDemandeRepository statusDemandeRepository, 
-        StatusRepository statusRepository) {
+            DemandeRepository demandeRepository,
+            StatusDemandeRepository statusDemandeRepository,
+            StatusRepository statusRepository) {
         this.demandeRepository = demandeRepository;
         this.statusDemandeRepository = statusDemandeRepository;
         this.statusRepository = statusRepository;
     }
 
     public List<Demande> getAllDemandes() {
-        return demandeRepository.findAll();
+        return demandeRepository.findAllWithDetails();
     }
 
     @Transactional
-    public void createDemande(Demande demande) {
-        Status statut_creer = statusRepository.findByLibelle(STATUS_DEMANDE_CREATE).get();
-        StatusDemande status_demande = new StatusDemande();
-        status_demande.setDemande(demande);
-        status_demande.setStatus(statut_creer);
-        demandeRepository.save(demande);
-        statusDemandeRepository.save(status_demande);
+    public Demande createDemande(Demande demande) {
+        Demande savedDemande = demandeRepository.save(demande);
+
+        Optional<Status> maybeStatus = statusRepository.findByLibelle(STATUS_DEMANDE_CREATE);
+        Status statusCreer = maybeStatus.orElseThrow(
+                () -> new IllegalStateException("Statut introuvable: " + STATUS_DEMANDE_CREATE));
+
+        StatusDemande statusDemande = new StatusDemande(savedDemande, statusCreer);
+        statusDemandeRepository.save(statusDemande);
+
+        return savedDemande;
     }
 }
