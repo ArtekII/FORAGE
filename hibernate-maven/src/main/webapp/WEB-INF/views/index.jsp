@@ -7,7 +7,7 @@
     <title>Forage - Accueil</title>
 </head>
 <body>
-    <h1>Application Forage</h1>
-    <p>Configuration JSP Spring MVC active.</p>
+    <h1>Bienvenue</h1>
+    <a href="${pageContext.request.contextPath}/demandes">Liste des demandes</a>
 </body>
 </html>

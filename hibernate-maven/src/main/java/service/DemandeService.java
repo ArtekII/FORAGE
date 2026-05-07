@@ -1,5 +1,6 @@
 package service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,4 +48,15 @@ public class DemandeService {
 
         return savedDemande;
     }
+
+    public List<Demande> filtreDemandes(
+        String reference,
+        Long clientId,
+        Long communeId,
+        String lieu,
+        LocalDateTime dateDebut,
+        LocalDateTime dateFin
+) {
+    return demandeRepository.filtreDemandes(reference,clientId,communeId,lieu,dateDebut,dateFin);
+}
 }

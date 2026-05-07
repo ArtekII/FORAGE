@@ -27,4 +27,8 @@ public class CommuneService {
                         "Commune introuvable avec libellé: " + libelle + " et district ID: " + districtId));
     }
 
+    public Commune getCommuneById(Long id) {
+        return communeRepository.findById(id).get();
+    }
+
 }

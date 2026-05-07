@@ -71,6 +71,11 @@ public class Demande {
         return "DEM-" + timestamp + "-" + random;
     }
 
+    public String getFormattedDateDemande() {
+        return dateDemande.format(
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
     public Long getId() {
         return id;
     }
