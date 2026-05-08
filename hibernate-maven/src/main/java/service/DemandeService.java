@@ -8,27 +8,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import model.Demande;
-import model.Status;
-import model.StatusDemande;
+import model.Statut;
+import model.StatutDemande;
 import repository.DemandeRepository;
-import repository.StatusDemandeRepository;
-import repository.StatusRepository;
+import repository.StatutDemandeRepository;
+import repository.StatutRepository;
 
 @Service
 public class DemandeService {
 
     private final DemandeRepository demandeRepository;
-    private final StatusDemandeRepository statusDemandeRepository;
-    private final StatusRepository statusRepository;
+    private final StatutDemandeRepository statutDemandeRepository;
+    private final StatutRepository statutRepository;
     private static final String STATUS_DEMANDE_CREATE = "demande_creer";
 
     public DemandeService(
             DemandeRepository demandeRepository,
-            StatusDemandeRepository statusDemandeRepository,
-            StatusRepository statusRepository) {
+            StatutDemandeRepository statutDemandeRepository,
+            StatutRepository statutRepository) {
         this.demandeRepository = demandeRepository;
-        this.statusDemandeRepository = statusDemandeRepository;
-        this.statusRepository = statusRepository;
+        this.statutDemandeRepository = statutDemandeRepository;
+        this.statutRepository = statutRepository;
     }
 
     public List<Demande> getAllDemandes() {
@@ -39,12 +39,12 @@ public class DemandeService {
     public Demande createDemande(Demande demande) {
         Demande savedDemande = demandeRepository.save(demande);
 
-        Optional<Status> maybeStatus = statusRepository.findByLibelle(STATUS_DEMANDE_CREATE);
-        Status statusCreer = maybeStatus.orElseThrow(
+        Optional<Statut> maybeStatut = statutRepository.findByLibelle(STATUS_DEMANDE_CREATE);
+        Statut statutCreer = maybeStatut.orElseThrow(
                 () -> new IllegalStateException("Statut introuvable: " + STATUS_DEMANDE_CREATE));
 
-        StatusDemande statusDemande = new StatusDemande(savedDemande, statusCreer);
-        statusDemandeRepository.save(statusDemande);
+        StatutDemande statutDemande = new StatutDemande(savedDemande, statutCreer);
+        statutDemandeRepository.save(statutDemande);
 
         return savedDemande;
     }

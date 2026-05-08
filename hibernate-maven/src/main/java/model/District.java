@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -22,7 +23,7 @@ public class District {
     private String libelle;
 
     @OneToMany(mappedBy = "district")
-    private List<Commune> communes;
+    private List<Commune> communes = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "region_id", nullable = false)

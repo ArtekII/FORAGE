@@ -28,17 +28,17 @@ INSERT INTO demande (reference, client_id, commune_id, lieu, date_demande) VALUE
 ('FOR-2026-003', 3, 4, 'Zone portuaire - Hangar B', '2026-05-05 10:15:00');
 
 -- Suivi pour la demande 1 (FOR-2026-001) : Déjà en cours de forage
-INSERT INTO status_demande (demande_id, status_id, date_status) VALUES 
+INSERT INTO statut_demande (demande_id, statut_id, date_statut) VALUES 
 (1, 1, '2026-05-01 09:00:00'),
 (1, 2, '2026-05-01 16:00:00'),
 (1, 3, '2026-05-02 10:00:00'),
 (1, 4, '2026-05-04 08:00:00');
 
 -- Suivi pour la demande 2 (FOR-2026-002) : Nouveau dossier
-INSERT INTO status_demande (demande_id, status_id, date_status) VALUES 
+INSERT INTO statut_demande (demande_id, statut_id, date_statut) VALUES 
 (2, 1, '2026-05-03 14:30:00');
 
 -- Suivi pour la demande 3 (FOR-2026-003) : Devis envoyé mais non validé
-INSERT INTO status_demande (demande_id, status_id, date_status) VALUES 
+INSERT INTO statut_demande (demande_id, statut_id, date_statut) VALUES 
 (3, 1, '2026-05-05 10:15:00'),
 (3, 2, '2026-05-05 11:45:00');

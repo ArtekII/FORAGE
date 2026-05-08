@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ public class Region {
     private String libelle;
 
     @OneToMany(mappedBy = "region")
-    private List<District> districts;
+    private List<District> districts = new ArrayList<>();
 
     public Region() {}
 

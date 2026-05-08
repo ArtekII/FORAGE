@@ -4,12 +4,12 @@ CREATE DATABASE IF NOT EXISTS forage_db
 
 USE forage_db;
 
-DROP TABLE IF EXISTS status_demande;
+DROP TABLE IF EXISTS statut_demande;
 DROP TABLE IF EXISTS demande;
 DROP TABLE IF EXISTS commune;
 DROP TABLE IF EXISTS district;
 DROP TABLE IF EXISTS region;
-DROP TABLE IF EXISTS `status`;
+DROP TABLE IF EXISTS `statut`;
 DROP TABLE IF EXISTS client;
 
 CREATE TABLE region (
@@ -72,33 +72,65 @@ CREATE TABLE demande (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-CREATE TABLE `status` (
+CREATE TABLE statut (
   id BIGINT NOT NULL AUTO_INCREMENT,
   libelle VARCHAR(100) NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uq_status_libelle (libelle)
+  UNIQUE KEY uq_statut_libelle (libelle)
 ) ENGINE=InnoDB;
 
-CREATE TABLE status_demande (
+CREATE TABLE statut_demande (
   id BIGINT NOT NULL AUTO_INCREMENT,
   demande_id BIGINT NOT NULL,
-  status_id BIGINT NOT NULL,
-  date_status DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  statut_id BIGINT NOT NULL,
+  date_statut DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   PRIMARY KEY (id),
-  KEY idx_status_demande_demande_id (demande_id),
-  KEY idx_status_demande_status_id (status_id),
-  CONSTRAINT fk_status_demande_demande
+  KEY idx_statut_demande_demande_id (demande_id),
+  KEY idx_statut_demande_statut_id (statut_id),
+  CONSTRAINT fk_statut_demande_demande
     FOREIGN KEY (demande_id) REFERENCES demande(id)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-  CONSTRAINT fk_status_demande_status
-    FOREIGN KEY (status_id) REFERENCES `status`(id)
+  CONSTRAINT fk_statut_demande_statut
+    FOREIGN KEY (statut_id) REFERENCES `statut`(id)
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-INSERT INTO `status` (libelle) VALUES
+INSERT INTO statut (libelle) VALUES
   ('demande_creer'),
   ('devis_genere'),
   ('devis_valide'),
   ('forage_en_cours'),
   ('forage_termine'),
   ('demande_cloturee');
+
+CREATE TABLE devis (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  client_id BIGINT NOT NULL,
+  statut_id BIGINT NOT NULL,
+  date_emission DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  PRIMARY KEY (id),
+  CONSTRAINT fk_devis_client FOREIGN KEY (client_id) REFERENCES client(id),
+  CONSTRAINT fk_devis_statut FOREIGN KEY (statut_id) REFERENCES statut(id)
+) ENGINE=InnoDB;
+
+CREATE TABLE details (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  devis_id BIGINT NOT NULL,
+  designation VARCHAR(255) NOT NULL,
+  quantite DECIMAL(10,2) NOT NULL,
+  unite VARCHAR(100) NOT NULL,
+  prix_unitaire DECIMAL(10,2) NOT NULL,
+  montant_par_ligne DECIMAL(10,2) AS (quantite * prix_unitaire) STORED,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_details_devis FOREIGN KEY (devis_id) REFERENCES devis(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+--on verra si on a besoin ou non
+CREATE TABLE historique_devis_statuts (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  devis_id BIGINT NOT NULL,
+  statut_id BIGINT NOT NULL,
+  date_changement DATETIME(6) DEFAULT CURRENT_TIMESTAMP(6),
+  FOREIGN KEY (devis_id) REFERENCES devis(id) ON DELETE CASCADE,
+  FOREIGN KEY (statut_id) REFERENCES statut(id)
+) ENGINE=InnoDB;

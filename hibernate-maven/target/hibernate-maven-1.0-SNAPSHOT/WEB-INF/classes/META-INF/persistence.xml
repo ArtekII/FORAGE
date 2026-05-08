@@ -11,8 +11,10 @@
         <class>model.Commune</class>
         <class>model.Client</class>
         <class>model.Demande</class>
-        <class>model.Status</class>
-        <class>model.StatusDemande</class>
+        <class>model.Statut</class>
+        <class>model.StatutDemande</class>
+        <class>model.Devis</class>
+        <class>model.Details</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/forage_db"/>
