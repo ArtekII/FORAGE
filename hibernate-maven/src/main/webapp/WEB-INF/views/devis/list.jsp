@@ -37,5 +37,8 @@
     </c:choose>
 
     <a href="${pageContext.request.contextPath}/devis/create">Ajouter une devis</a>
+    <a href="${pageContext.request.contextPath}/devis/pdf">
+        Exporter en PDF
+    </a>
 </body>
 </html>

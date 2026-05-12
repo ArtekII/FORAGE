@@ -11,9 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "details")
+@Table(name = "devis_details")
 public class Details {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +35,6 @@ public class Details {
 
     @Column(name = "prix_unitaire", nullable = false, precision = 10, scale = 2)
     private BigDecimal prixUnitaire;
-
-    @Column(name = "montant_par_ligne", precision = 10, scale = 2, insertable = false, updatable = false)
-    private BigDecimal montantParLigne;
 
     public Details() {}
 
@@ -73,7 +71,10 @@ public class Details {
     }
 
     public BigDecimal getMontantParLigne() {
-        return montantParLigne;
+        if (quantite == null || prixUnitaire == null) {
+            return BigDecimal.ZERO;
+        }
+        return quantite.multiply(prixUnitaire);
     }
 
     public void setId(Long id) {
@@ -100,7 +101,8 @@ public class Details {
         this.prixUnitaire = prixUnitaire;
     }
 
-    public void setMontantParLigne(BigDecimal montantParLigne) {
-        this.montantParLigne = montantParLigne;
+    @Transient
+    public BigDecimal getMontantLigne() {
+        return getMontantParLigne();
     }
 }

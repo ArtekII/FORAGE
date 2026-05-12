@@ -1,8 +1,8 @@
 package model;
 
 import java.math.BigDecimal;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +28,15 @@ public class Devis {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "client_id", nullable = false)
-    private Client client;
+    @JoinColumn(name = "demande_id", nullable = false)
+    private Demande demande;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "statut_id", nullable = false)
-    private Statut statut;
+    @JoinColumn(name = "type_id", nullable = false)
+    private Type type;
+
+    @Column(name = "observation")
+    private String observation;
 
     @Column(name = "date_emission", nullable = false, updatable = false)
     private LocalDateTime dateEmission;
@@ -46,14 +49,16 @@ public class Devis {
 
     public Devis() {}
 
-    public Devis(Client client, Statut statut) {
-        this.client = client;
-        this.statut = statut;
+    public Devis(Demande demande, Type type) {
+        this.demande = demande;
+        this.type = type;
     }
 
-    public Devis(Client client, LocalDateTime dateEmission) {
-        this.client = client;
+    public Devis(Demande demande, Type type, LocalDateTime dateEmission, String observation) {
+        this.demande = demande;
+        this.type = type;
         this.dateEmission = dateEmission;
+        this.observation = observation;
     }
 
     @PrePersist
@@ -90,16 +95,24 @@ public class Devis {
         return dateEmission.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
 
+    public Client getClient() {
+        return demande == null ? null : demande.getClient();
+    }
+
     public Long getId() {
         return id;
     }
 
-    public Client getClient() {
-        return client;
+    public Demande getDemande() {
+        return demande;
     }
 
-    public Statut getStatut() {
-        return statut;
+    public Type getType() {
+        return type;
+    }
+
+    public String getObservation() {
+        return observation;
     }
 
     public LocalDateTime getDateEmission() {
@@ -109,7 +122,7 @@ public class Devis {
     public double getMontantTotal() {
         return calculateMontantTotal();
     }
-    
+
     public List<Details> getDetails() {
         return details;
     }
@@ -118,20 +131,24 @@ public class Devis {
         this.id = id;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setDemande(Demande demande) {
+        this.demande = demande;
     }
 
-    public void setMontantTotal(double montantTotal) {
-        this.montantTotal = montantTotal;
+    public void setType(Type type) {
+        this.type = type;
     }
 
-    public void setStatut(Statut statut) {
-        this.statut = statut;
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 
     public void setDateEmission(LocalDateTime dateEmission) {
         this.dateEmission = dateEmission;
+    }
+
+    public void setMontantTotal(double montantTotal) {
+        this.montantTotal = montantTotal;
     }
 
     public void setDetails(List<Details> details) {

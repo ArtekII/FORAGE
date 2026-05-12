@@ -26,9 +26,6 @@ public class Client {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Demande> demandes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "client")
-    private List<Devis> devis = new ArrayList<>();
     
     public Client() {}
 

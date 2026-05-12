@@ -13,6 +13,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DemandeRepository extends JpaRepository<model.Demande, Long> {
     Optional<model.Demande> findByReference(String reference);
+    @Query("""
+        SELECT d FROM Demande d
+        LEFT JOIN FETCH d.client
+        WHERE UPPER(TRIM(d.reference)) = UPPER(TRIM(:reference))
+    """)
+    Optional<Demande> findByReferenceNormalized(@Param("reference") String reference);
     boolean existsByReference(String reference);
 
     List<model.Demande> findByClient_Id(Long clientId);

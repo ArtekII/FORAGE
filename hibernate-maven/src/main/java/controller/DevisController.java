@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import jakarta.servlet.http.HttpServletRequest;
-import model.Client;
+import model.Demande;
 import model.Details;
 import model.Devis;
-import service.ClientService;
+import model.Type;
+import service.DemandeService;
 import service.DevisService;
+import service.TypeService;
 
 
 @Controller
@@ -27,14 +29,16 @@ import service.DevisService;
 public class DevisController {
     
     private final DevisService devisService;
-    private final ClientService clientService;
+    private final DemandeService demandeService;
+    private final TypeService typeService;
 
-    public DevisController(DevisService devisService, ClientService clientService) {
+    public DevisController(DevisService devisService, DemandeService demandeService, TypeService typeService) {
         this.devisService = devisService;
-        this.clientService = clientService;
+        this.demandeService = demandeService;
+        this.typeService = typeService;
     }
 
-    @GetMapping
+    @GetMapping({"", "/"})
     public ModelAndView listDevis() {
         ModelAndView mav = new ModelAndView("devis/list");
         List<Devis> devis = devisService.getDevis();
@@ -45,7 +49,7 @@ public class DevisController {
     @GetMapping("/create")
     public ModelAndView createDevisForm() {
         ModelAndView mav = new ModelAndView("devis/create");
-        mav.addObject("clients", clientService.getClients());
+        mav.addObject("types", typeService.getTypes());
         mav.addObject("datetime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
 
         return mav;
@@ -60,14 +64,16 @@ public class DevisController {
 
     @PostMapping("/create")
     public String createDevis(
-        @RequestParam("clientId") Long clientId, 
+        @RequestParam("demandeId") Long demandeId,
+        @RequestParam("typeId") Long typeId,
+        @RequestParam(value = "observation", required = false) String observation,
         @RequestParam(value = "dateEmission", required = false)
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime dateEmission,
         HttpServletRequest request) {
-        Client client = clientService.getClientById(clientId);
-
-        Devis devis = new Devis(client, dateEmission);
+        Demande demande = demandeService.getDemandeById(demandeId);
+        Type type = typeService.getTypeById(typeId);
+        Devis devis = new Devis(demande, type, dateEmission, observation);
 
         int index = 0;
         while (true) {

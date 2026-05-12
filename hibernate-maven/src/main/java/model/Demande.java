@@ -8,11 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +41,9 @@ public class Demande {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "commune_id", nullable = false)
     private Commune commune;
+
+    @OneToMany(mappedBy = "demande")
+    private List<Devis> devis = new ArrayList<>();
 
     public Demande() {}
 
@@ -100,6 +106,10 @@ public class Demande {
         return commune;
     }
 
+    public List<Devis> getDevis() {
+        return devis;
+    }
+
     public void setClient(Client client) {
         this.client = client;
     }
@@ -118,5 +128,9 @@ public class Demande {
 
     public void setCommune(Commune commune) {
         this.commune = commune;
+    }
+
+    public void setDevis(List<Devis> devis) {
+        this.devis = devis;
     }
 }

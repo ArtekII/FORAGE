@@ -20,7 +20,7 @@ public class DemandeService {
     private final DemandeRepository demandeRepository;
     private final StatutDemandeRepository statutDemandeRepository;
     private final StatutRepository statutRepository;
-    private static final String STATUS_DEMANDE_CREATE = "demande_creer";
+    private static final String STATUS_DEMANDE_CREATE = "Demande Creer";
 
     public DemandeService(
             DemandeRepository demandeRepository,
@@ -33,6 +33,18 @@ public class DemandeService {
 
     public List<Demande> getAllDemandes() {
         return demandeRepository.findAllWithDetails();
+    }
+
+    public Demande getDemandeById(Long id) {
+        return demandeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Demande introuvable: " + id));
+    }
+
+    public Optional<Demande> findByReference(String reference) {
+        if (reference == null || reference.isBlank()) {
+            return Optional.empty();
+        }
+        return demandeRepository.findByReferenceNormalized(reference.trim());
     }
 
     @Transactional
