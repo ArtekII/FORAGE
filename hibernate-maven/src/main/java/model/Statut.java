@@ -19,6 +19,11 @@ public class Statut {
 
     protected Statut() {}
 
+    public Statut(Long id, String libelle) {
+        this.id = id;
+        this.libelle = libelle;
+    }
+
     public Statut(String libelle) {
         this.libelle = libelle;
     }

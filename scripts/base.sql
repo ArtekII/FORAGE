@@ -77,6 +77,7 @@ CREATE TABLE demande (
 
 CREATE TABLE statut (
   id BIGINT NOT NULL AUTO_INCREMENT,
+  sigle VARCHAR(50) NOT NULL,
   libelle VARCHAR(100) NOT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY uq_statut_libelle (libelle)
@@ -98,13 +99,12 @@ CREATE TABLE statut_demande (
     ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
-INSERT INTO statut (libelle) VALUES
-  ('Demande Creer'),
-  ('Devis Etude Creer'),
-  ('Devis Etude Refuser'),
-  ('Devis Forage Creer'),
-  ('Devis Forage Refuser'),
-  ('Demande Cloturee');
+INSERT INTO statut (sigle, libelle) VALUES
+  ('C','Demande Creer'),
+  ('DEC','Devis Etude Creer'),
+  ('DER','Devis Etude Refuser'),
+  ('DFC','Devis Forage Creer'),
+  ('DFR','Devis Forage Refuser');
 
 CREATE TABLE type(
   id BIGINT NOT NULL AUTO_INCREMENT,
