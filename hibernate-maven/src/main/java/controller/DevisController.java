@@ -49,6 +49,7 @@ public class DevisController {
     @GetMapping("/create")
     public ModelAndView createDevisForm() {
         ModelAndView mav = new ModelAndView("devis/create");
+        mav.addObject("demandes", demandeService.getAllDemandes());
         mav.addObject("types", typeService.getTypes());
         mav.addObject("datetime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm")));
 

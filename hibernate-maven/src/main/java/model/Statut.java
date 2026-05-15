@@ -14,17 +14,22 @@ public class Statut {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "sigle", nullable = false, unique = true)
+    private String sigle;
+
     @Column(name = "libelle", nullable = false, unique = true)
     private String libelle;
 
     protected Statut() {}
 
-    public Statut(Long id, String libelle) {
+    public Statut(Long id, String sigle, String libelle) {
         this.id = id;
+        this.sigle = sigle;
         this.libelle = libelle;
     }
 
-    public Statut(String libelle) {
+    public Statut(String sigle, String libelle) {
+        this.sigle = sigle;
         this.libelle = libelle;
     }
 
@@ -36,6 +41,10 @@ public class Statut {
         return libelle;
     }
 
+    public String getSigle() {
+        return sigle;
+    }
+
     public void setLibelle(String libelle) {
         this.libelle = libelle;
     }
@@ -43,6 +52,12 @@ public class Statut {
     public String getNomStatut() {
         return libelle;
     }
+
+    public void setSigle(String sigle) {
+        this.sigle = sigle;
+    }
+
+    
 
     public void setNomStatut(String libelle) {
         this.libelle = libelle;
