@@ -1,5 +1,5 @@
 Interface : gestion demandestatut
-1 - ajouter demande (ref demande, ajax mivoaka ny information)
+1 - ajouter demande (ref demande, ajax mivoaka ny information) -> liste deroulante
 2 - Date d'ajout status avec minute
 3 - status (observation, liste deroulante)
 ajout ligne dans le demandestatus
@@ -38,4 +38,4 @@ ex : - duree de passage entre 1 sy 2 superieur 350 alerte rouge
 
 
 liste demande, et affichage du alerte (ceux qui n'ont pas d'alerte n'est pas dans la liste)
-API : php iray mandray formulaire numero demande miantso api de mamerina le liste alerte
+API : php prend le formulaire numero demande appele api et retourne le liste alerte

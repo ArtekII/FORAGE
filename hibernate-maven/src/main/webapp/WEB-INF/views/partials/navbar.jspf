@@ -2,4 +2,5 @@
     <a href="${pageContext.request.contextPath}/">Accueil</a>
     <a href="${pageContext.request.contextPath}/demandes">Liste des demandes</a>
     <a href="${pageContext.request.contextPath}/devis">Liste des devis</a>
+    <a href="${pageContext.request.contextPath}/demande-statut">Statut des demandes</a>
 </nav>
