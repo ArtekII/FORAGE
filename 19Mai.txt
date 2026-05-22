@@ -1,0 +1,41 @@
+Interface : gestion demandestatut
+1 - ajouter demande (ref demande, ajax mivoaka ny information)
+2 - Date d'ajout status avec minute
+3 - status (observation, liste deroulante)
+ajout ligne dans le demandestatus
+
+Modife : 
+demande
+Date
+Observation
+Status(seulement ce que le demande a deja passé qui montre) depend du demande
+update iddemande, idstatut
+
+
+iddemande 13 statut 1 creer le 04/05/26 ..:.. 
+apres devis
+-... -.      statut 2 creer le ....
+apres acceptation(utilisation du formulaire ajout statudemande)
+-------------statut 3 creer le ...............
+
+ajout de colonne, "Durée Travailler : D.T" : en minutes , durée de changement de statut 
+le debut il y a rien mais apres devis il y a le changement (on ne compte pas le weekend ,
+on considère juste le temps de travail 8h à 16h)
+recalcul toujours apres modif
+entre 2 status, pas de cumul
+centralisé
+
+
+Table parametre : 
+idstatut1
+idstatut2
+duree (minutes cumulés entre les statuss 1 et 2)
+alerte
+ex : - duree de passage entre 1 sy 2 superieur 350 alerte rouge
+     - duree de passage entre 1 et 2 superieur a 200 alerte jaune
+     - duree de passage entre 4 et 6 superieur 1000 alerte jaune
+     - duree de passage entre 1 et 10 (total) superieur 10 000 alerte rouge 
+
+
+liste demande, et affichage du alerte (ceux qui n'ont pas d'alerte n'est pas dans la liste)
+API : php iray mandray formulaire numero demande miantso api de mamerina le liste alerte
