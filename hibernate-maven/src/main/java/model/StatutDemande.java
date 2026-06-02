@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,14 +29,39 @@ public class StatutDemande {
     @JoinColumn(name = "statut_id", nullable = false)
     private Statut statut;
 
-    @Column(name = "date_statut", nullable = false, updatable = false)
+    @Column(name = "date_statut", nullable = false)
     private LocalDateTime dateStatut;
+
+    private String observation;
+
+    private double dureeTravail;
 
     public StatutDemande() {}
 
     public StatutDemande(Demande demande, Statut statut) {
         this.demande = demande;
         this.statut = statut;
+    }
+
+    public StatutDemande(Demande demande, Statut statut, LocalDateTime dateStatut) {
+        this.demande = demande;
+        this.statut = statut;
+        this.dateStatut = dateStatut;
+    }
+
+    public StatutDemande(Demande demande, Statut statut, LocalDateTime dateStatut, String observation) {
+        this.demande = demande;
+        this.statut = statut;
+        this.dateStatut = dateStatut;
+        this.observation = observation;
+    }
+
+    public StatutDemande(Demande demande, Statut statut, LocalDateTime dateStatut, String observation, double dureeTravail) {
+        this.demande = demande;
+        this.statut = statut;
+        this.dateStatut = dateStatut;
+        this.observation = observation;
+        this.dureeTravail = dureeTravail;
     }
 
     @PrePersist
@@ -75,5 +101,35 @@ public class StatutDemande {
 
     public void setDateStatut(LocalDateTime dateStatut) {
         this.dateStatut = dateStatut;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    public double getDureeTravail() {
+        return dureeTravail;
+    }
+
+    public void setDureeTravail(double dureeTravail) {
+        this.dureeTravail = dureeTravail;
+    }
+
+    public String getFormattedDateStatut() {
+        if (dateStatut == null) {
+            return "";
+        }
+        return dateStatut.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String getDateStatutInput() {
+        if (dateStatut == null) {
+            return "";
+        }
+        return dateStatut.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
     }
 }

@@ -4,6 +4,7 @@
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/DevisRepository.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/StatutMappingUtils.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Type.java
+/home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/StatutService.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/DetailsRepository.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/RegionRepository.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Details.java
@@ -27,7 +28,9 @@
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Statut.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/DemandeService.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/DevisService.java
+/home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/controller/DemandeStatusController.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/Demande.java
+/home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/DemandeStatutService.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/TypeRepository.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/controller/DevisApiController.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/repository/DemandeRepository.java

@@ -8,6 +8,7 @@
 - Choisir le statut (liste déroulante) et saisir une observation.
 - Enregistrer dans la table `demande_statut`.
 
+
 ## 2. Modification d'une ligne existante
 
 Champs modifiables :
@@ -49,6 +50,9 @@ Exemples de règles :
 - Durée de passage entre 4 et 6 > 1000 -> alerte jaune
 - Durée totale entre 1 et 10 > 10 000 -> alerte rouge
 
+Duree cree jusqu'a terminer (Par exemple statut1 = 1, statut2 = 10)
+On regarde pour chaque demande son statut, trier par date
+
 ## 5. Affichage des alertes
 
 - Dans la liste des demandes, afficher uniquement celles qui ont au moins une alerte.
@@ -64,3 +68,9 @@ Exemples de règles :
 - Priorité des alertes si plusieurs seuils correspondent (jaune et rouge).
 - Signification exacte de "status déjà passé" (historique pur ou transitions autorisées).
 - Alignement technique entre backend actuel (Java/Spring) et mention d'API PHP.
+
+
+Le php mandray idDemande, 
+donc liste_demande avec information
+
+A faire : script de reinitialisation sql

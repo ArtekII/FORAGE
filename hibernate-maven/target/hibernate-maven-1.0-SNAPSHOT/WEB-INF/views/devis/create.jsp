@@ -44,30 +44,25 @@
         <label for="observation">Observation :</label>
         <input type="textarea" name="observation" id="observation" maxlength="255">
 
-        <button type="button" id="btnAfficherFormDetail">Ajouter un détail</button>
+        <button type="button" id="btnAjouterDetail">Ajouter un détail</button>
 
-        <fieldset id="detailFormContainer" style="display: none; margin-top: 12px;">
-            <legend>Nouveau détail</legend>
-
-            <label for="designation">Désignation :</label>
-            <input type="text" id="designation" />
-
-            <label for="quantite">Quantité :</label>
-            <input type="number" id="quantite" step="0.01" min="0.01" />
-
-            <label for="unite">Unité :</label>
-            <input type="text" id="unite" />
-
-            <label for="prixUnitaire">Prix unitaire :</label>
-            <input type="number" id="prixUnitaire" step="0.01" min="0.01" />
-
-            <button type="button" id="btnCreerDetail">Créer le détail</button>
+        <fieldset id="detailFormContainer" style="margin-top: 12px;">
+            <legend>Détails du devis</legend>
+            <table border="1" cellpadding="4" cellspacing="0" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Désignation</th>
+                        <th>Quantité</th>
+                        <th>Unité</th>
+                        <th>Prix unitaire</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="detailsRows"></tbody>
+            </table>
+            <p id="detailsEmptyMessage" style="margin: 8px 0;">Aucun détail pour le moment.</p>
         </fieldset>
-
-        <h3 style="margin-top: 14px;">Détails ajoutés</h3>
-        <div id="detailsList">
-            <p>Aucun détail pour le moment.</p>
-        </div>
 
         <div id="detailsHiddenInputs"></div>
 
@@ -79,10 +74,9 @@
         const contextPath = "${pageContext.request.contextPath}";
 
         const devisForm = document.getElementById("devisForm");
-        const btnAfficherFormDetail = document.getElementById("btnAfficherFormDetail");
-        const detailFormContainer = document.getElementById("detailFormContainer");
-        const btnCreerDetail = document.getElementById("btnCreerDetail");
-        const detailsList = document.getElementById("detailsList");
+        const btnAjouterDetail = document.getElementById("btnAjouterDetail");
+        const detailsRows = document.getElementById("detailsRows");
+        const detailsEmptyMessage = document.getElementById("detailsEmptyMessage");
         const detailsHiddenInputs = document.getElementById("detailsHiddenInputs");
 
         const inputDemandeReference = document.getElementById("demandeReference");
@@ -91,13 +85,6 @@
         const demandeClient = document.getElementById("demandeClient");
         const demandeDate = document.getElementById("demandeDate");
         const demandeLieu = document.getElementById("demandeLieu");
-
-        const inputDesignation = document.getElementById("designation");
-        const inputQuantite = document.getElementById("quantite");
-        const inputUnite = document.getElementById("unite");
-        const inputPrixUnitaire = document.getElementById("prixUnitaire");
-
-        const details = [];
 
         function resetDemandeInfo(message, color) {
             inputDemandeId.value = "";
@@ -155,76 +142,91 @@
             return parsed;
         }
 
-        function renderDetails() {
-            detailsList.innerHTML = "";
-            detailsHiddenInputs.innerHTML = "";
+        function refreshDetailIndexes() {
+            const rows = detailsRows.querySelectorAll("tr");
+            rows.forEach((row, index) => {
+                const indexCell = row.querySelector(".detailIndex");
+                if (indexCell) {
+                    indexCell.textContent = String(index + 1);
+                }
+            });
 
-            if (details.length === 0) {
-                detailsList.innerHTML = "<p>Aucun détail pour le moment.</p>";
+            detailsEmptyMessage.style.display = rows.length === 0 ? "block" : "none";
+        }
+
+        function createDetailRow() {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td class="detailIndex"></td>
+                <td><input type="text" class="detailDesignation" /></td>
+                <td><input type="number" class="detailQuantite" step="0.01" min="0.01" /></td>
+                <td><input type="text" class="detailUnite" /></td>
+                <td><input type="number" class="detailPrixUnitaire" step="0.01" min="0.01" /></td>
+                <td><button type="button" class="btnSupprimerDetail">Supprimer</button></td>
+            `;
+            detailsRows.appendChild(row);
+            refreshDetailIndexes();
+            return row;
+        }
+
+        inputDemandeReference.addEventListener("change", loadDemandeByReference);
+
+        btnAjouterDetail.addEventListener("click", () => {
+            const newRow = createDetailRow();
+            const firstInput = newRow.querySelector(".detailDesignation");
+            if (firstInput) {
+                firstInput.focus();
+            }
+        });
+
+        detailsRows.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!target.classList.contains("btnSupprimerDetail")) {
                 return;
             }
 
-            const table = document.createElement("table");
-            table.border = "1";
-            table.cellPadding = "4";
-            table.cellSpacing = "0";
+            const row = target.closest("tr");
+            if (row) {
+                row.remove();
+            }
+            refreshDetailIndexes();
+        });
 
-            const thead = document.createElement("thead");
-            const headerRow = document.createElement("tr");
-            const headers = ["#", "Désignation", "Quantité", "Unité", "Prix unitaire", "Montant", "Actions"];
-            headers.forEach((label) => {
-                const th = document.createElement("th");
-                th.textContent = label;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
-            table.appendChild(thead);
+        devisForm.addEventListener("submit", (event) => {
+            if (!inputDemandeId.value) {
+                event.preventDefault();
+                resetDemandeInfo("Référence invalide ou non chargée. Impossible de créer le devis.", "darkred");
+                inputDemandeReference.focus();
+                return;
+            }
 
-            const tbody = document.createElement("tbody");
+            detailsHiddenInputs.innerHTML = "";
 
-            details.forEach((detail, index) => {
-                const row = document.createElement("tr");
+            const rows = detailsRows.querySelectorAll("tr");
+            if (rows.length === 0) {
+                event.preventDefault();
+                alert("Veuillez ajouter au moins un détail.");
+                return;
+            }
 
-                const indexCell = document.createElement("td");
-                indexCell.textContent = String(index + 1);
-                row.appendChild(indexCell);
+            for (let index = 0; index < rows.length; index++) {
+                const row = rows[index];
+                const designation = row.querySelector(".detailDesignation").value.trim();
+                const unite = row.querySelector(".detailUnite").value.trim();
+                const quantite = parsePositiveNumber(row.querySelector(".detailQuantite").value);
+                const prixUnitaire = parsePositiveNumber(row.querySelector(".detailPrixUnitaire").value);
 
-                const designationCell = document.createElement("td");
-                designationCell.textContent = detail.designation;
-                row.appendChild(designationCell);
-
-                const quantiteCell = document.createElement("td");
-                quantiteCell.textContent = detail.quantite.toFixed(2);
-                row.appendChild(quantiteCell);
-
-                const uniteCell = document.createElement("td");
-                uniteCell.textContent = detail.unite;
-                row.appendChild(uniteCell);
-
-                const prixCell = document.createElement("td");
-                prixCell.textContent = detail.prixUnitaire.toFixed(2);
-                row.appendChild(prixCell);
-
-                const montantCell = document.createElement("td");
-                montantCell.textContent = detail.montant.toFixed(2);
-                row.appendChild(montantCell);
-
-                const actionCell = document.createElement("td");
-                const removeButton = document.createElement("button");
-                removeButton.type = "button";
-                removeButton.className = "btnSupprimerDetail";
-                removeButton.setAttribute("data-index", String(index));
-                removeButton.textContent = "Supprimer";
-                actionCell.appendChild(removeButton);
-                row.appendChild(actionCell);
-
-                tbody.appendChild(row);
+                if (!designation || !unite || quantite === null || prixUnitaire === null) {
+                    event.preventDefault();
+                    alert("Veuillez remplir correctement tous les champs du détail n°" + (index + 1) + ".");
+                    return;
+                }
 
                 const fields = [
-                    ["designation", detail.designation],
-                    ["quantite", detail.quantite],
-                    ["unite", detail.unite],
-                    ["prixUnitaire", detail.prixUnitaire]
+                    ["designation", designation],
+                    ["quantite", quantite],
+                    ["unite", unite],
+                    ["prixUnitaire", prixUnitaire]
                 ];
 
                 fields.forEach(([name, value]) => {
@@ -234,67 +236,6 @@
                     hiddenInput.value = String(value);
                     detailsHiddenInputs.appendChild(hiddenInput);
                 });
-            });
-
-            table.appendChild(tbody);
-            detailsList.appendChild(table);
-        }
-
-        btnAfficherFormDetail.addEventListener("click", () => {
-            detailFormContainer.style.display = "block";
-            inputDesignation.focus();
-        });
-
-        inputDemandeReference.addEventListener("change", loadDemandeByReference);
-
-        btnCreerDetail.addEventListener("click", () => {
-            const designation = inputDesignation.value.trim();
-            const unite = inputUnite.value.trim();
-            const quantite = parsePositiveNumber(inputQuantite.value);
-            const prixUnitaire = parsePositiveNumber(inputPrixUnitaire.value);
-
-            if (!designation || !unite || quantite === null || prixUnitaire === null) {
-                alert("Veuillez remplir correctement tous les champs du détail.");
-                return;
-            }
-
-            details.push({
-                designation,
-                unite,
-                quantite,
-                prixUnitaire,
-                montant: quantite * prixUnitaire
-            });
-
-            renderDetails();
-
-            inputDesignation.value = "";
-            inputQuantite.value = "";
-            inputUnite.value = "";
-            inputPrixUnitaire.value = "";
-            inputDesignation.focus();
-        });
-
-        detailsList.addEventListener("click", (event) => {
-            const target = event.target;
-            if (!target.classList.contains("btnSupprimerDetail")) {
-                return;
-            }
-
-            const index = Number.parseInt(target.getAttribute("data-index"), 10);
-            if (Number.isNaN(index)) {
-                return;
-            }
-
-            details.splice(index, 1);
-            renderDetails();
-        });
-
-        devisForm.addEventListener("submit", (event) => {
-            if (!inputDemandeId.value) {
-                event.preventDefault();
-                resetDemandeInfo("Référence invalide ou non chargée. Impossible de créer le devis.", "darkred");
-                inputDemandeReference.focus();
             }
         });
 
