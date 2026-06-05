@@ -20,6 +20,7 @@
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/controller/HomeController.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/controller/DevisController.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/DetailsService.java
+/home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/CalculDureeTravail.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/service/ValidationDemarrage.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/model/StatutDemande.java
 /home/itu/Bureau/S4/SPRING/FORAGE/hibernate-maven/src/main/java/controller/DemandeController.java

@@ -89,6 +89,7 @@ CREATE TABLE statut_demande (
   statut_id BIGINT NOT NULL,
   date_statut DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
   observation VARCHAR(255),
+  duree_travail_minutes DECIMAL(10,2),
   PRIMARY KEY (id),
   KEY idx_statut_demande_demande_id (demande_id),
   KEY idx_statut_demande_statut_id (statut_id),

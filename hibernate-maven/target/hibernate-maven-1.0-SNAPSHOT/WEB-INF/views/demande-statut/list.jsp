@@ -24,6 +24,7 @@
                     <th>Client</th>
                     <th>Statut</th>
                     <th>Date statut</th>
+                    <th>D.T. (min)</th>
                     <th>Observation</th>
                     <th>Action</th>
                 </tr>
@@ -34,6 +35,7 @@
                         <td>${status.demande.client.nom} ${status.demande.client.prenom}</td>
                         <td>${status.statut.libelle}</td>
                         <td>${status.formattedDateStatut}</td>
+                        <td>${status.formattedDureeTravail}</td>
                         <td>${status.observation}</td>
                         <td>
                             <a href="${pageContext.request.contextPath}/demande-statut/edit/${status.id}">Modifier</a>

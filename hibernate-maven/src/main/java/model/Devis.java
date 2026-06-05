@@ -63,6 +63,9 @@ public class Devis {
 
     @PrePersist
     private void initDateEmission() {
+        if (demande == null) {
+            throw new IllegalStateException("Le devis doit être lié à une demande avant d'être persisté.");
+        }
         if (dateEmission == null) {
             dateEmission = LocalDateTime.now();
         }

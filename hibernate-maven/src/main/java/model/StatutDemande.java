@@ -34,6 +34,7 @@ public class StatutDemande {
 
     private String observation;
 
+    @Column(name = "duree_travail_minutes")
     private double dureeTravail;
 
     public StatutDemande() {}
@@ -87,6 +88,14 @@ public class StatutDemande {
         return dateStatut;
     }
 
+    public String getObservation() {
+        return observation;
+    }
+
+    public double getDureeTravail() {
+        return dureeTravail;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -103,20 +112,19 @@ public class StatutDemande {
         this.dateStatut = dateStatut;
     }
 
-    public String getObservation() {
-        return observation;
-    }
-
     public void setObservation(String observation) {
         this.observation = observation;
     }
-
-    public double getDureeTravail() {
-        return dureeTravail;
-    }
-
+    
     public void setDureeTravail(double dureeTravail) {
         this.dureeTravail = dureeTravail;
+    }
+
+    public String getFormattedDureeTravail() {
+        if (dureeTravail <= 0) {
+            return "-";
+        }
+        return String.valueOf((long) dureeTravail);
     }
 
     public String getFormattedDateStatut() {

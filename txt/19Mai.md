@@ -51,7 +51,7 @@ Exemples de règles :
 - Durée totale entre 1 et 10 > 10 000 -> alerte rouge
 
 Duree cree jusqu'a terminer (Par exemple statut1 = 1, statut2 = 10)
-On regarde pour chaque demande son statut, trier par date
+On regarde pour chaque demande son statut, trier par date+-7    
 
 ## 5. Affichage des alertes
 

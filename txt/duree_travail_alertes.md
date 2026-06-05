@@ -19,7 +19,7 @@
 
 4. **Recalcul après chaque modification**
    - Toute modification de date ou de statut peut changer plusieurs durées : la ligne modifiée, et potentiellement la ou les lignes suivantes.
-   - Il faut centraliser ce calcul dans un service unique plutôt que le recalculer dans la vue ou dans plusieurs contrôleurs.
+   - Il faut centraliser ce calcul dans un service (CalculDureeTravail dans le dossier service) unique plutôt que le recalculer dans la vue ou dans plusieurs contrôleurs.
 
 5. **Pas de cumul global dans la colonne**
    - La colonne `D.T` est une durée d’intervalle entre deux statuts, pas un total cumulatif.
@@ -28,19 +28,13 @@
 6. **Implications pour la base de données**
    - Soit on stocke une colonne dédiée dans `statut_demande` (par exemple `duree_travail_minutes`), soit on calcule la valeur à la volée.
    - Si on stocke la valeur, il faut la maintenir à jour à chaque insertion ou modification.
+   - Il est mieux de ne pas stocker
 
 7. **Contraintes métier supplémentaires**
-   - Le calcul doit être stable et centralisé : un composant/service unique gère la logique des heures ouvrées et week-ends.
+   - Le calcul doit être stable et centralisé : un service unique gère la logique des heures ouvrées et week-ends.
    - Les règles doivent pouvoir évoluer sans dupliquer de code.
 
-## Ce que cela signifie concrètement
-
-- Ajout ou modification de l’historique des statuts devient plus complexe.
-- Il faut une implémentation claire de la « journée ouvrée » (08-16) et des weekends.
-- Le projet passe d’une simple gestion de listes à une logique de calcul de durées métier.
-- Une interface de test ou de validation métier peut être utile pour garantir la qualité du calcul.
-
-## Relation avec les alertes
+## Relation avec les alertes (a ignorer pour le moment a revoir plus tard)
 
 - La table de paramétrage d’alertes lie des paires de statuts à une durée seuil.
 - Elle permet d’évaluer des durées entre des statuts définis (1→2, 4→6, 1→10, etc.).

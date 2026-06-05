@@ -10,6 +10,7 @@ import model.Demande;
 import model.Statut;
 import model.StatutDemande;
 import repository.DevisRepository;
+import service.DemandeService;
 import repository.StatutRepository;
 import repository.StatutDemandeRepository;
 
@@ -18,14 +19,17 @@ public class DevisService {
     private final DevisRepository devisRepository;
     private final StatutDemandeRepository statutDemandeRepository;
     private final StatutRepository statutRepository;
+    private final DemandeService demandeService;
 
     public DevisService(
             DevisRepository devisRepository,
             StatutDemandeRepository statutDemandeRepository,
-            StatutRepository statutRepository) {
+            StatutRepository statutRepository,
+            DemandeService demandeService) {
         this.devisRepository = devisRepository;
         this.statutDemandeRepository = statutDemandeRepository;
         this.statutRepository = statutRepository;
+        this.demandeService = demandeService;
     }
 
     public List<Devis> getDevis() {
@@ -42,6 +46,13 @@ public class DevisService {
         if (devis.getDemande() == null) {
             throw new IllegalArgumentException("Le devis doit être lié à une demande.");
         }
+        if (devis.getDemande().getId() == null) {
+            throw new IllegalArgumentException("La demande liée au devis doit avoir un id valide.");
+        }
+
+        Demande managedDemande = demandeService.getDemandeById(devis.getDemande().getId());
+        devis.setDemande(managedDemande);
+
         if (devis.getType() == null) {
             throw new IllegalArgumentException("Le devis doit avoir un type.");
         }
