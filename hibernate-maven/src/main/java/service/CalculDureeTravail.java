@@ -16,6 +16,21 @@ public class CalculDureeTravail {
     private static final LocalTime DEBUT_JOURNEE = LocalTime.of(8, 0);
     private static final LocalTime FIN_JOURNEE = LocalTime.of(16, 0);
 
+    public long calculerDureeTotal(List<StatutDemande> statutDemandes) {
+        if (statutDemandes == null || statutDemandes.size() < 2) {
+            return 0;
+        }
+
+        statutDemandes.sort(Comparator.comparing(StatutDemande::getDateStatut));
+        long total = 0;
+
+        for (int i = 1; i < statutDemandes.size(); i++) {
+            total += calculerDureeTravail(statutDemandes.get(i - 1), statutDemandes.get(i));
+        }
+
+        return total;
+    }
+
     public long calculerMinutesOuvrees(LocalDateTime debut, LocalDateTime fin) {
         if (debut == null || fin == null || !debut.isBefore(fin)) {
             return 0;
@@ -54,6 +69,33 @@ public class CalculDureeTravail {
         return calculerMinutesOuvrees(precedent.getDateStatut(), actuel.getDateStatut());
     }
 
+    public long calculerDureeEntreStatuts(List<StatutDemande> statutDemandes, Long statutDepartId, Long statutArriveeId) {
+        if (statutDemandes == null || statutDemandes.size() < 2 || statutDepartId == null || statutArriveeId == null) {
+            return 0;
+        }
+
+        statutDemandes.sort(Comparator.comparing(StatutDemande::getDateStatut));
+        long dureeMax = 0;
+
+        for (int i = 0; i < statutDemandes.size(); i++) {
+            StatutDemande depart = statutDemandes.get(i);
+            if (!hasStatutId(depart, statutDepartId)) {
+                continue;
+            }
+
+            for (int j = i + 1; j < statutDemandes.size(); j++) {
+                StatutDemande arrivee = statutDemandes.get(j);
+                if (hasStatutId(arrivee, statutArriveeId)) {
+                    long duree = calculerMinutesOuvrees(depart.getDateStatut(), arrivee.getDateStatut());
+                    dureeMax = Math.max(dureeMax, duree);
+                    break;
+                }
+            }
+        }
+
+        return dureeMax;
+    }
+
     public void recalculerDurees(List<StatutDemande> statutDemandes) {
         if (statutDemandes == null || statutDemandes.isEmpty()) {
             return;
@@ -75,6 +117,12 @@ public class CalculDureeTravail {
     private boolean estJourOuvrable(LocalDate date) {
         DayOfWeek jour = date.getDayOfWeek();
         return jour != DayOfWeek.SATURDAY && jour != DayOfWeek.SUNDAY;
+    }
+
+    private boolean hasStatutId(StatutDemande statutDemande, Long statutId) {
+        return statutDemande != null
+                && statutDemande.getStatut() != null
+                && statutId.equals(statutDemande.getStatut().getId());
     }
 
     private LocalDateTime max(LocalDateTime a, LocalDateTime b) {

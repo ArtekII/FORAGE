@@ -20,7 +20,7 @@ public class DemandeService {
     private final DemandeRepository demandeRepository;
     private final StatutDemandeRepository statutDemandeRepository;
     private final StatutRepository statutRepository;
-    private static final String STATUS_DEMANDE_CREATE = "Demande Creer";
+    private static final String SIGLE_DEMANDE_CREATE = "C";
 
     public DemandeService(
             DemandeRepository demandeRepository,
@@ -51,9 +51,9 @@ public class DemandeService {
     public Demande createDemande(Demande demande) {
         Demande savedDemande = demandeRepository.save(demande);
 
-        Optional<Statut> maybeStatut = statutRepository.findByLibelle(STATUS_DEMANDE_CREATE);
+        Optional<Statut> maybeStatut = statutRepository.findBySigle(SIGLE_DEMANDE_CREATE);
         Statut statutCreer = maybeStatut.orElseThrow(
-                () -> new IllegalStateException("Statut introuvable: " + STATUS_DEMANDE_CREATE));
+                () -> new IllegalStateException("Statut initial introuvable pour le sigle: " + SIGLE_DEMANDE_CREATE));
 
         StatutDemande statutDemande = new StatutDemande(savedDemande, statutCreer);
         statutDemandeRepository.save(statutDemande);

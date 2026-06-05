@@ -72,6 +72,6 @@ public class DemandeStatusController {
                                      @RequestParam("dateChangement") String dateChangement,
                                      @RequestParam("observation") String observation) {
         demandeStatutService.createDemandeStatus(demandeId, statutId, dateChangement, observation);
-        return "redirect:/demande-statut/create";
+        return "redirect:/demande-statut";
     }
 }

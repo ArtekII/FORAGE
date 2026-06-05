@@ -4,6 +4,9 @@ CREATE DATABASE IF NOT EXISTS forage_db
 
 USE forage_db;
 
+DROP TABLE IF EXISTS devis_details;
+DROP TABLE IF EXISTS devis;
+DROP TABLE IF EXISTS alerte_parametre;
 DROP TABLE IF EXISTS statut_demande;
 DROP TABLE IF EXISTS demande;
 DROP TABLE IF EXISTS commune;
@@ -12,8 +15,6 @@ DROP TABLE IF EXISTS region;
 DROP TABLE IF EXISTS type;
 DROP TABLE IF EXISTS statut;
 DROP TABLE IF EXISTS client;
-DROP TABLE IF EXISTS devis;
-DROP TABLE IF EXISTS devis_details;
 
 CREATE TABLE region (
   id BIGINT NOT NULL AUTO_INCREMENT,
@@ -80,6 +81,7 @@ CREATE TABLE statut (
   sigle VARCHAR(50) NOT NULL,
   libelle VARCHAR(100) NOT NULL,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_statut_sigle (sigle),
   UNIQUE KEY uq_statut_libelle (libelle)
 ) ENGINE=InnoDB;
 
@@ -140,3 +142,18 @@ CREATE TABLE devis_details (
   CONSTRAINT fk_details_devis FOREIGN KEY (devis_id) REFERENCES devis(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE alerte_parametre (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  statut_depart_id BIGINT NOT NULL,
+  statut_arrivee_id BIGINT NOT NULL,
+  duree_minutes DECIMAL(10,2) NOT NULL,
+  niveau VARCHAR(20) NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_alerte_statut_depart FOREIGN KEY (statut_depart_id) REFERENCES statut(id),
+  CONSTRAINT fk_alerte_statut_arrivee FOREIGN KEY (statut_arrivee_id) REFERENCES statut(id)
+) ENGINE=InnoDB;
+
+INSERT INTO alerte_parametre (statut_depart_id, statut_arrivee_id, duree_minutes, niveau) VALUES
+  (1, 2, 200, 'JAUNE'),
+  (1, 2, 350, 'ROUGE'),
+  (1, 4, 1000, 'JAUNE');

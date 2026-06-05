@@ -39,3 +39,8 @@ ex : - duree de passage entre 1 sy 2 superieur 350 alerte rouge
 
 liste demande, et affichage du alerte (ceux qui n'ont pas d'alerte n'est pas dans la liste)
 API : php prend le formulaire numero demande appele api et retourne le liste alerte
+
+Bien decomposer les fonctions;
+Pas de fonction frontend dans backend
+Constantes (pas en dur)
+Bien utiliser les @Transactional
