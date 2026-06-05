@@ -20,16 +20,19 @@ public class DevisService {
     private final StatutDemandeRepository statutDemandeRepository;
     private final StatutRepository statutRepository;
     private final DemandeService demandeService;
+    private final DemandeStatutService demandeStatutService;
 
     public DevisService(
             DevisRepository devisRepository,
             StatutDemandeRepository statutDemandeRepository,
             StatutRepository statutRepository,
-            DemandeService demandeService) {
+            DemandeService demandeService,
+            DemandeStatutService demandeStatutService) {
         this.devisRepository = devisRepository;
         this.statutDemandeRepository = statutDemandeRepository;
         this.statutRepository = statutRepository;
         this.demandeService = demandeService;
+        this.demandeStatutService = demandeStatutService;
     }
 
     public List<Devis> getDevis() {
@@ -68,6 +71,7 @@ public class DevisService {
         Statut statut = statutRepository.getReferenceById(statutId);
         StatutDemande statutDemande = new StatutDemande(demande, statut);
         statutDemandeRepository.save(statutDemande);
+        demandeStatutService.recalculateDureeTravailForDemande(demande.getId());
 
         return savedDevis;
     }
