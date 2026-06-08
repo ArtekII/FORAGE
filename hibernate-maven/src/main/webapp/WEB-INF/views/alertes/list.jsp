@@ -21,20 +21,13 @@
             <c:forEach var="demandeAlerte" items="${demandesAlertes}">
                 <h3>Demande ${demandeAlerte.demande.reference}</h3>
 
-                <table border="1" cellpadding="6">
-                    <tr>
-                        <th>Client</th>
-                        <th>Lieu</th>
-                        <th>Commune</th>
-                        <th>Date demande</th>
-                    </tr>
-                    <tr>
-                        <td>${demandeAlerte.demande.client.nom} ${demandeAlerte.demande.client.prenom}</td>
-                        <td>${demandeAlerte.demande.lieu}</td>
-                        <td>${demandeAlerte.demande.commune.libelle}</td>
-                        <td>${demandeAlerte.demande.formattedDateDemande}</td>
-                    </tr>
-                </table>
+                <ul class="demande-details">
+                    <li><strong>Reference :</strong> ${demandeAlerte.demande.reference}</li>
+                    <li><strong>Client :</strong> ${demandeAlerte.demande.client.nom} ${demandeAlerte.demande.client.prenom}</li>
+                    <li><strong>Lieu :</strong> ${demandeAlerte.demande.lieu}</li>
+                    <li><strong>Commune :</strong> ${demandeAlerte.demande.commune.libelle}</li>
+                    <li><strong>Date demande :</strong> ${demandeAlerte.demande.formattedDateDemande}</li>
+                </ul>
 
                 <table border="1" cellpadding="6">
                     <tr>
@@ -46,7 +39,11 @@
                     </tr>
                     <c:forEach var="alerte" items="${demandeAlerte.alertes}">
                         <tr>
-                            <td>${alerte.niveau}</td>
+                            <td>
+                                <span class="alerte-niveau alerte-niveau-${alerte.niveau}">
+                                    ${alerte.niveau}
+                                </span>
+                            </td>
                             <td>${alerte.statutDepartLibelle}</td>
                             <td>${alerte.statutArriveeLibelle}</td>
                             <td>${alerte.dureeMinutes}</td>
@@ -78,7 +75,11 @@
                         <td>${parametre.statutDepart.libelle}</td>
                         <td>${parametre.statutArrivee.libelle}</td>
                         <td>${parametre.dureeMinutesAsLong}</td>
-                        <td>${parametre.niveau}</td>
+                        <td>
+                            <span class="alerte-niveau alerte-niveau-${parametre.niveau}">
+                                ${parametre.niveau}
+                            </span>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>

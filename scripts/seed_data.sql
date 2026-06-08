@@ -19,8 +19,6 @@ INSERT INTO commune (libelle, district_id) VALUES
 
 INSERT INTO client (nom, prenom, email, telephone, adresse) VALUES 
 ('Ranaivo', 'Jean', 'jean.ranaivo@email.mg', '+261 34 00 123 45', 'Lot IVG 42 Ambodivona'),
-('Andria', 'Mamy', 'mamy.andria@gmail.com', '+261 32 11 555 99', 'Rue de l’Indépendance'),
+('Andria', 'Mamy', 'mamy.andria@gmail.com', '+261 32 11 555 99', 'Rue de l Indépendance'),
 ('Dupont', 'Marie', 'marie.dupont@orange.fr', '+261 33 88 777 00', 'Villa 4, Résidence du Port');
-
-
 

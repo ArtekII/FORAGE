@@ -164,6 +164,42 @@ p {
     margin: 8px 0;
 }
 
+.demande-details {
+    margin: 0 0 16px;
+    padding: 12px 16px 12px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.demande-details li {
+    margin: 4px 0;
+}
+
+.alerte-niveau {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.alerte-niveau-JAUNE {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.alerte-niveau-ROUGE {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
 .filter-form {
     max-width: 100%;
 }

@@ -69,7 +69,7 @@ public class DevisService {
         Demande demande = savedDevis.getDemande();
         Long statutId = StatutMappingUtils.getIdStatutFromTypeId(typeId);
         Statut statut = statutRepository.getReferenceById(statutId);
-        StatutDemande statutDemande = new StatutDemande(demande, statut);
+        StatutDemande statutDemande = new StatutDemande(demande, statut, savedDevis.getDateEmission());
         statutDemandeRepository.save(statutDemande);
         demandeStatutService.recalculateDureeTravailForDemande(demande.getId());
 

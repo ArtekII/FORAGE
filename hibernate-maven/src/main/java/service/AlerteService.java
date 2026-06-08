@@ -55,6 +55,17 @@ public class AlerteService {
         return resultats;
     }
 
+    public List<DemandeAlerte> getToutesDemandesAvecAlertes() {
+        List<AlerteParametre> parametres = getParametres();
+        List<DemandeAlerte> resultats = new ArrayList<>();
+
+        for (Demande demande : demandeRepository.findAllWithDetails()) {
+            resultats.add(new DemandeAlerte(demande, getAlertesForDemande(demande, parametres)));
+        }
+
+        return resultats;
+    }
+
     public List<AlerteEvaluation> getAlertesForDemande(Long demandeId) {
         Demande demande = demandeRepository.findById(demandeId)
                 .orElseThrow(() -> new IllegalArgumentException("Demande introuvable: " + demandeId));
