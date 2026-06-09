@@ -10,5 +10,6 @@
 <body>
     <%@ include file="/WEB-INF/views/partials/navbar.jspf" %>
     <h1>Bienvenue</h1>
+    <a href="http://localhost/forage-alertes">Page php</a>
 </body>
 </html>

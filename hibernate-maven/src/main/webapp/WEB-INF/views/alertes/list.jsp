@@ -35,7 +35,7 @@
                         <th>Statut départ</th>
                         <th>Statut arrivée</th>
                         <th>Durée (min)</th>
-                        <th>Seuil (min)</th>
+                        <th>Intervalle (min)</th>
                     </tr>
                     <c:forEach var="alerte" items="${demandeAlerte.alertes}">
                         <tr>
@@ -47,7 +47,7 @@
                             <td>${alerte.statutDepartLibelle}</td>
                             <td>${alerte.statutArriveeLibelle}</td>
                             <td>${alerte.dureeMinutes}</td>
-                            <td>${alerte.seuilMinutes}</td>
+                            <td>${alerte.intervalleMinutes1} - ${alerte.intervalleMinutes2}</td>
                         </tr>
                     </c:forEach>
                 </table>
@@ -66,7 +66,7 @@
                     <th>ID</th>
                     <th>Statut départ</th>
                     <th>Statut arrivée</th>
-                    <th>Seuil (min)</th>
+                    <th>Intervalle (min)</th>
                     <th>Niveau</th>
                 </tr>
                 <c:forEach var="parametre" items="${parametresAlertes}">
@@ -74,7 +74,7 @@
                         <td>${parametre.id}</td>
                         <td>${parametre.statutDepart.libelle}</td>
                         <td>${parametre.statutArrivee.libelle}</td>
-                        <td>${parametre.dureeMinutesAsLong}</td>
+                        <td>${parametre.intervalleMinutes1} - ${parametre.intervalleMinutes2}</td>
                         <td>
                             <span class="alerte-niveau alerte-niveau-${parametre.niveau}">
                                 ${parametre.niveau}

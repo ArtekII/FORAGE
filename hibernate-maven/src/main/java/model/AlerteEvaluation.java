@@ -1,11 +1,13 @@
 package model;
 
+import java.util.Locale;
+
 public class AlerteEvaluation {
     private final Demande demande;
     private final AlerteParametre parametre;
-    private final long dureeMinutes;
+    private final double dureeMinutes;
 
-    public AlerteEvaluation(Demande demande, AlerteParametre parametre, long dureeMinutes) {
+    public AlerteEvaluation(Demande demande, AlerteParametre parametre, double dureeMinutes) {
         this.demande = demande;
         this.parametre = parametre;
         this.dureeMinutes = dureeMinutes;
@@ -19,12 +21,24 @@ public class AlerteEvaluation {
         return parametre;
     }
 
-    public long getDureeMinutes() {
+    public double getDureeMinutes() {
         return dureeMinutes;
     }
 
-    public long getSeuilMinutes() {
-        return parametre.getDureeMinutesAsLong();
+    public String getFormattedDureeHeures() {
+        return formatMinutesEnHeures(dureeMinutes);
+    }
+
+    public String getFormattedIntervalleHeures() {
+        return formatMinutesEnHeures(getIntervalleMinutes1()) + " - " + formatMinutesEnHeures(getIntervalleMinutes2());
+    }
+
+    public double getIntervalleMinutes1() {
+        return parametre.getIntervalleMinutes1();
+    }
+
+    public double getIntervalleMinutes2() {
+        return parametre.getIntervalleMinutes2();
     }
 
     public String getNiveau() {
@@ -37,5 +51,9 @@ public class AlerteEvaluation {
 
     public String getStatutArriveeLibelle() {
         return parametre.getStatutArrivee().getLibelle();
+    }
+
+    private String formatMinutesEnHeures(double minutes) {
+        return String.format(Locale.US, "%.2f h", minutes / 60.0);
     }
 }

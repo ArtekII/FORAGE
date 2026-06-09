@@ -108,7 +108,10 @@ INSERT INTO statut (sigle, libelle) VALUES
   ('DEC','Devis Etude Creer'),
   ('DER','Devis Etude Refuser'),
   ('DFC','Devis Forage Creer'),
-  ('DFR','Devis Forage Refuser');
+  ('DFR','Devis Forage Refuser'),
+  ('FC', 'Forage Creer'),
+  ('FR', 'Forage Refuser'),
+  ('FCT', 'Forage Terminer');
 
 CREATE TABLE type(
   id BIGINT NOT NULL AUTO_INCREMENT,
@@ -146,14 +149,17 @@ CREATE TABLE alerte_parametre (
   id BIGINT NOT NULL AUTO_INCREMENT,
   statut_depart_id BIGINT NOT NULL,
   statut_arrivee_id BIGINT NOT NULL,
-  duree_minutes DECIMAL(10,2) NOT NULL,
+  intervalle_minutes_1 DECIMAL(10,2) NOT NULL,
+  intervalle_minutes_2 DECIMAL(10,2) NOT NULL,
   niveau VARCHAR(20) NOT NULL,
   PRIMARY KEY (id),
   CONSTRAINT fk_alerte_statut_depart FOREIGN KEY (statut_depart_id) REFERENCES statut(id),
   CONSTRAINT fk_alerte_statut_arrivee FOREIGN KEY (statut_arrivee_id) REFERENCES statut(id)
 ) ENGINE=InnoDB;
 
-INSERT INTO alerte_parametre (statut_depart_id, statut_arrivee_id, duree_minutes, niveau) VALUES
-  (1, 2, 200, 'JAUNE'),
-  (1, 2, 350, 'ROUGE'),
-  (1, 4, 1000, 'JAUNE');
+INSERT INTO alerte_parametre (statut_depart_id, statut_arrivee_id, intervalle_minutes_1, intervalle_minutes_2, niveau) VALUES
+  (1, 2, 200, 350, 'JAUNE'),
+  (1, 2, 350, 1000, 'ROUGE'),
+  (1, 4, 1000, 2000, 'JAUNE'),
+  (1, 8, 200, 350, 'JAUNE'),
+  (1, 8, 350, 1000, 'ROUGE');

@@ -72,7 +72,8 @@ public class AlerteApiController {
             json.append("\"statutDepart\":\"").append(escapeJson(alerte.getStatutDepartLibelle())).append("\",");
             json.append("\"statutArrivee\":\"").append(escapeJson(alerte.getStatutArriveeLibelle())).append("\",");
             json.append("\"dureeMinutes\":").append(alerte.getDureeMinutes()).append(",");
-            json.append("\"seuilMinutes\":").append(alerte.getSeuilMinutes());
+            json.append("\"intervalleMinutes1\":").append(alerte.getIntervalleMinutes1()).append(",");
+            json.append("\"intervalleMinutes2\":").append(alerte.getIntervalleMinutes2());
             json.append("}");
             if (i < alertes.size() - 1) {
                 json.append(",");

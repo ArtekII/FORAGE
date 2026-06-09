@@ -2,9 +2,7 @@ package service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,39 +70,78 @@ public class AlerteService {
         return getAlertesForDemande(demande, getParametres());
     }
 
+    public void remplirAlertes(List<Demande> demandes) {
+        if (demandes == null || demandes.isEmpty()) {
+            return;
+        }
+
+        List<AlerteParametre> parametres = getParametres();
+        for (Demande demande : demandes) {
+            demande.setAlertes(getAlertesForDemande(demande, parametres));
+        }
+    }
+
     private List<AlerteEvaluation> getAlertesForDemande(Demande demande, List<AlerteParametre> parametres) {
         List<StatutDemande> historique = statutDemandeRepository.findByDemande_IdOrderByDateStatutAscWithDetails(demande.getId());
-        Map<String, AlerteEvaluation> meilleuresAlertes = new LinkedHashMap<>();
+        List<AlerteEvaluation> alertes = new ArrayList<>();
 
         for (AlerteParametre parametre : parametres) {
             Long statutDepartId = parametre.getStatutDepart().getId();
             Long statutArriveeId = parametre.getStatutArrivee().getId();
-            long duree = calculDureeTravail.calculerDureeEntreStatuts(historique, statutDepartId, statutArriveeId);
+            double duree = calculerDureeEntreStatutsAvecHistorique(historique, statutDepartId, statutArriveeId);
 
-            if (duree > parametre.getDureeMinutesAsLong()) {
-                String key = statutDepartId + "-" + statutArriveeId;
-                AlerteEvaluation candidate = new AlerteEvaluation(demande, parametre, duree);
-                AlerteEvaluation existante = meilleuresAlertes.get(key);
-                if (existante == null || compareAlertes(candidate, existante) > 0) {
-                    meilleuresAlertes.put(key, candidate);
+            if (parametre.contientDuree(duree)) {
+                alertes.add(new AlerteEvaluation(demande, parametre, duree));
+            }
+        }
+
+        alertes.sort(Comparator
+                .comparingInt((AlerteEvaluation alerte) -> getPrioriteNiveau(alerte.getNiveau())).reversed()
+                .thenComparing(AlerteEvaluation::getStatutDepartLibelle)
+                .thenComparing(AlerteEvaluation::getStatutArriveeLibelle)
+                .thenComparing(AlerteEvaluation::getIntervalleMinutes1));
+        return alertes;
+    }
+
+    private double calculerDureeEntreStatutsAvecHistorique(List<StatutDemande> historique, Long statutDepartId, Long statutArriveeId) {
+        if (historique == null || historique.size() < 2 || statutDepartId == null || statutArriveeId == null) {
+            return 0;
+        }
+
+        List<StatutDemande> statuts = new ArrayList<>(historique);
+        statuts.sort(Comparator.comparing(StatutDemande::getDateStatut));
+
+        double dureeMax = 0;
+        boolean intervalleTrouve = false;
+
+        for (int i = 0; i < statuts.size(); i++) {
+            StatutDemande depart = statuts.get(i);
+            if (!hasStatutId(depart, statutDepartId)) {
+                continue;
+            }
+
+            double duree = 0;
+            for (int j = i + 1; j < statuts.size(); j++) {
+                StatutDemande courant = statuts.get(j);
+                duree += courant.getDureeTravail();
+                if (hasStatutId(courant, statutArriveeId)) {
+                    intervalleTrouve = true;
+                    dureeMax = Math.max(dureeMax, duree);
+                    break;
                 }
             }
         }
 
-        List<AlerteEvaluation> alertes = new ArrayList<>(meilleuresAlertes.values());
-        alertes.sort(Comparator
-                .comparingInt((AlerteEvaluation alerte) -> getPrioriteNiveau(alerte.getNiveau())).reversed()
-                .thenComparing(AlerteEvaluation::getStatutDepartLibelle)
-                .thenComparing(AlerteEvaluation::getStatutArriveeLibelle));
-        return alertes;
+        if (intervalleTrouve) {
+            return dureeMax;
+        }
+        return calculDureeTravail.calculerDureeEntreStatuts(statuts, statutDepartId, statutArriveeId);
     }
 
-    private int compareAlertes(AlerteEvaluation a, AlerteEvaluation b) {
-        int prioriteCompare = Integer.compare(getPrioriteNiveau(a.getNiveau()), getPrioriteNiveau(b.getNiveau()));
-        if (prioriteCompare != 0) {
-            return prioriteCompare;
-        }
-        return Long.compare(a.getSeuilMinutes(), b.getSeuilMinutes());
+    private boolean hasStatutId(StatutDemande statutDemande, Long statutId) {
+        return statutDemande != null
+                && statutDemande.getStatut() != null
+                && statutId.equals(statutDemande.getStatut().getId());
     }
 
     private int getPrioriteNiveau(String niveau) {

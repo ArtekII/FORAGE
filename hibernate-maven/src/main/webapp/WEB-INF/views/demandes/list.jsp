@@ -10,6 +10,7 @@
 </head>
 <body>
     <%@ include file="/WEB-INF/views/partials/navbar.jspf" %>
+    <h1>ETU004248</h1>
     <h1>Liste des demandes</h1>
     <form method="get" action="${pageContext.request.contextPath}/demandes" class="filter-form">
         <div class="filter-form-header">
@@ -83,6 +84,8 @@
                     <th>Lieu</th>
                     <th>Commune</th>
                     <th>Date demande</th>
+                    <th>Durée totale (Terminé uniquement)</th>
+                    <th>Alertes</th>
                 </tr>
                 <c:forEach var="demande" items="${demandes}">
                     <tr>
@@ -92,6 +95,30 @@
                         <td>${demande.lieu}</td>
                         <td>${demande.commune.libelle}</td>
                         <td>${demande.formattedDateDemande}</td>
+                        <td>${demande.formattedDureeTotaleHeures}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${empty demande.alertes}">
+                                    <span class="alertes-empty">Aucune</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <ul class="alertes-demande">
+                                        <c:forEach var="alerte" items="${demande.alertes}">
+                                            <li>
+                                                <span class="alerte-niveau alerte-niveau-${alerte.niveau}">
+                                                    ${alerte.niveau}
+                                                </span>
+                                                <span class="alerte-detail">
+                                                    ${alerte.statutDepartLibelle} -> ${alerte.statutArriveeLibelle}
+                                                    <strong>${alerte.formattedDureeHeures}</strong>
+                                                    <small>(${alerte.formattedIntervalleHeures})</small>
+                                                </span>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>

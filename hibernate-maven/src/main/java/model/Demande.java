@@ -11,11 +11,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -44,6 +46,12 @@ public class Demande {
 
     @OneToMany(mappedBy = "demande")
     private List<Devis> devis = new ArrayList<>();
+
+    @Transient
+    private long dureeTotale;
+
+    @Transient
+    private List<AlerteEvaluation> alertes = new ArrayList<>();
 
     public Demande() {}
 
@@ -110,6 +118,18 @@ public class Demande {
         return devis;
     }
 
+    public long getDureeTotale() {
+        return dureeTotale;
+    }
+
+    public String getFormattedDureeTotaleHeures() {
+        return formatMinutesEnHeures(dureeTotale);
+    }
+
+    public List<AlerteEvaluation> getAlertes() {
+        return alertes;
+    }
+
     public void setClient(Client client) {
         this.client = client;
     }
@@ -132,5 +152,17 @@ public class Demande {
 
     public void setDevis(List<Devis> devis) {
         this.devis = devis;
+    }
+
+    public void setDureeTotale(long dureeTotale) {
+        this.dureeTotale = dureeTotale;
+    }
+
+    public void setAlertes(List<AlerteEvaluation> alertes) {
+        this.alertes = alertes == null ? new ArrayList<>() : alertes;
+    }
+
+    private String formatMinutesEnHeures(double minutes) {
+        return String.format(Locale.US, "%.2f h", minutes / 60.0);
     }
 }

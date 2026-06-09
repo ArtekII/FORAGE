@@ -25,8 +25,11 @@ public class AlerteParametre {
     @JoinColumn(name = "statut_arrivee_id", nullable = false)
     private Statut statutArrivee;
 
-    @Column(name = "duree_minutes", nullable = false)
-    private double dureeMinutes;
+    @Column(name = "intervalle_minutes_1", nullable = false)
+    private double intervalleMinutes1;
+
+    @Column(name = "intervalle_minutes_2", nullable = false)
+    private double intervalleMinutes2;
 
     @Column(nullable = false)
     private String niveau;
@@ -45,8 +48,12 @@ public class AlerteParametre {
         return statutArrivee;
     }
 
-    public double getDureeMinutes() {
-        return dureeMinutes;
+    public double getIntervalleMinutes1() {
+        return intervalleMinutes1;
+    }
+
+    public double getIntervalleMinutes2() {
+        return intervalleMinutes2;
     }
 
     public String getNiveau() {
@@ -65,15 +72,20 @@ public class AlerteParametre {
         this.statutArrivee = statutArrivee;
     }
 
-    public void setDureeMinutes(double dureeMinutes) {
-        this.dureeMinutes = dureeMinutes;
+    public void setIntervalleMinutes1(double intervalleMinutes1) {
+        this.intervalleMinutes1 = intervalleMinutes1;
+    }
+
+    public void setIntervalleMinutes2(double intervalleMinutes2) {
+        this.intervalleMinutes2 = intervalleMinutes2;
     }
 
     public void setNiveau(String niveau) {
         this.niveau = niveau;
     }
 
-    public long getDureeMinutesAsLong() {
-        return dureeMinutes == 0 ? 0 : (long) dureeMinutes;
+    public boolean contientDuree(double dureeMinutes) {
+        return dureeMinutes >= intervalleMinutes1
+                && dureeMinutes <= intervalleMinutes2;
     }
 }

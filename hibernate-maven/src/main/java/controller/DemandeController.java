@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import model.Client;
 import model.Commune;
 import model.Demande;
+import service.AlerteService;
 import service.ClientService;
 import service.CommuneService;
 import service.DemandeService;
@@ -26,11 +27,13 @@ public class DemandeController {
     private final DemandeService demandeService;
     private final CommuneService communeService;
     private final ClientService clientService;
+    private final AlerteService alerteService;
 
-    public DemandeController(DemandeService demandeService, CommuneService communeService, ClientService clientService) {
+    public DemandeController(DemandeService demandeService, CommuneService communeService, ClientService clientService, AlerteService alerteService) {
         this.demandeService = demandeService;
         this.communeService = communeService;
         this.clientService = clientService;
+        this.alerteService = alerteService;
     }
 
     @GetMapping
@@ -49,10 +52,13 @@ public class DemandeController {
         ModelAndView mav = new ModelAndView("demandes/list");
 
         List<Demande> demandes = demandeService.filtreDemandes(reference,clientId,communeId,lieu,dateDebut,dateFin);
+        long dureeTotale = demandeService.getDureeTotaleTermine(demandes);
+        alerteService.remplirAlertes(demandes);
 
         mav.addObject("demandes", demandes);
         mav.addObject("clients", clientService.getClients());
         mav.addObject("communes", communeService.getAllCommunes());
+        mav.addObject("dureeTotale", dureeTotale);
         return mav;
     }
     

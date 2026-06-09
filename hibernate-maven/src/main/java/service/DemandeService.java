@@ -21,6 +21,7 @@ public class DemandeService {
     private final StatutDemandeRepository statutDemandeRepository;
     private final StatutRepository statutRepository;
     private static final String SIGLE_DEMANDE_CREATE = "C";
+    private static final String SIGLE_FORAGE_TERMINE = "FCT";
 
     public DemandeService(
             DemandeRepository demandeRepository,
@@ -55,20 +56,61 @@ public class DemandeService {
         Statut statutCreer = maybeStatut.orElseThrow(
                 () -> new IllegalStateException("Statut initial introuvable pour le sigle: " + SIGLE_DEMANDE_CREATE));
 
-        StatutDemande statutDemande = new StatutDemande(savedDemande, statutCreer);
+        StatutDemande statutDemande = new StatutDemande(savedDemande, statutCreer, savedDemande.getDateDemande());
         statutDemandeRepository.save(statutDemande);
 
         return savedDemande;
     }
 
     public List<Demande> filtreDemandes(
-        String reference,
-        Long clientId,
-        Long communeId,
-        String lieu,
-        LocalDateTime dateDebut,
-        LocalDateTime dateFin
-) {
-    return demandeRepository.filtreDemandes(reference,clientId,communeId,lieu,dateDebut,dateFin);
-}
+            String reference,
+            Long clientId,
+            Long communeId,
+            String lieu,
+            LocalDateTime dateDebut,
+            LocalDateTime dateFin
+    ) {
+        return demandeRepository.filtreDemandes(reference,clientId,communeId,lieu,dateDebut,dateFin);
+    }
+
+    public long getDureeTotaleTermine(List<Demande> demandes) {
+        if (demandes == null || demandes.isEmpty()) {
+            return 0;
+        }
+
+        long total = 0;
+        for (Demande demande : demandes) {
+            long duree = getDureeTotaleTerminee(demande);
+            demande.setDureeTotale(duree);
+            total += duree;
+        }
+        return total;
+    }
+
+    private long getDureeTotaleTerminee(Demande demande) {
+        if (demande == null || demande.getId() == null) {
+            return 0;
+        }
+
+        List<StatutDemande> historique = statutDemandeRepository
+                .findByDemande_IdOrderByDateStatutAscWithDetails(demande.getId());
+        if (!isDernierStatutTermine(historique)) {
+            return 0;
+        }
+
+        return historique.stream()
+                .mapToLong(statutDemande -> (long) statutDemande.getDureeTravail())
+                .sum();
+    }
+
+    private boolean isDernierStatutTermine(List<StatutDemande> historique) {
+        if (historique == null || historique.isEmpty()) {
+            return false;
+        }
+
+        StatutDemande dernier = historique.get(historique.size() - 1);
+        return dernier.getStatut() != null
+                && dernier.getStatut().getSigle() != null
+                && SIGLE_FORAGE_TERMINE.equalsIgnoreCase(dernier.getStatut().getSigle());
+    }
 }
