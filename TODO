@@ -1,0 +1,25 @@
+Configuration de Spring MVC et des dependances necessaires
+Restructurage du projet
+
+Creation des models pour les tables -ok
+    Faire les entites hierarchiques -ok
+        Region -ok
+        District avec id Region -ok
+        Commune avec id District -ok
+    Faire les entites OneToMany -ok
+        Demande -> Client -ok
+    Faire les entites ManyToMany -ok
+        Table associative Demande <-> Statut -ok
+Creation des repositories -ok
+    Requete pour filtre
+
+Creation du service pour les Demandes
+    Fonction pour avoir les demandes
+    Fonction transactional d'ajout de demande
+    Fonction pour le filtre de demande
+Creation du Controller pour les Demandes
+    Mapping pour afficher la liste
+    Mapping pour afficher le formulaire
+    Mapping post pour ajouter la demande a la base
+    Mapping pour afficher la liste filtrer
+        Si aucun filtre, rediriger vers le mapping du liste

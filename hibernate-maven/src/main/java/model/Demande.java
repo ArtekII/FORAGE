@@ -1,0 +1,168 @@
+package model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+
+@Entity
+@Table(name = "demande")
+public class Demande {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, updatable = false)
+    private String reference;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @Column(name = "date_demande", nullable = false, updatable = false)
+    private LocalDateTime dateDemande;
+
+    @Column(nullable = false)
+    private String lieu;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "commune_id", nullable = false)
+    private Commune commune;
+
+    @OneToMany(mappedBy = "demande")
+    private List<Devis> devis = new ArrayList<>();
+
+    @Transient
+    private long dureeTotale;
+
+    @Transient
+    private List<AlerteEvaluation> alertes = new ArrayList<>();
+
+    public Demande() {}
+
+    public Demande(Client client, String lieu, Commune commune) {
+        this.client = client;
+        this.lieu = lieu;
+        this.commune = commune;
+    }
+
+    public Demande(String reference, Client client, LocalDateTime dateDemande, String lieu, Commune commune) {
+        this.reference = reference;
+        this.client = client;
+        this.dateDemande = dateDemande;
+        this.lieu = lieu;
+        this.commune = commune;
+    }
+
+    @PrePersist
+    private void initDefaults() {
+        if (dateDemande == null) {
+            dateDemande = LocalDateTime.now();
+        }
+        if (reference == null || reference.isBlank()) {
+            reference = generateReference();
+        }
+    }
+
+    public String generateReference() {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String random = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        return "DEM-" + timestamp + "-" + random;
+    }
+
+    public String getFormattedDateDemande() {
+        return dateDemande.format(
+                DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public LocalDateTime getDateDemande() {
+        return dateDemande;
+    }
+
+    public String getLieu() {
+        return lieu;
+    }
+
+    public Commune getCommune() {
+        return commune;
+    }
+
+    public List<Devis> getDevis() {
+        return devis;
+    }
+
+    public long getDureeTotale() {
+        return dureeTotale;
+    }
+
+    public String getFormattedDureeTotaleHeures() {
+        return formatMinutesEnHeures(dureeTotale);
+    }
+
+    public List<AlerteEvaluation> getAlertes() {
+        return alertes;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
+    }
+
+    public void setDateDemande(LocalDateTime dateDemande) {
+        this.dateDemande = dateDemande;
+    }
+
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
+    }
+
+    public void setCommune(Commune commune) {
+        this.commune = commune;
+    }
+
+    public void setDevis(List<Devis> devis) {
+        this.devis = devis;
+    }
+
+    public void setDureeTotale(long dureeTotale) {
+        this.dureeTotale = dureeTotale;
+    }
+
+    public void setAlertes(List<AlerteEvaluation> alertes) {
+        this.alertes = alertes == null ? new ArrayList<>() : alertes;
+    }
+
+    private String formatMinutesEnHeures(double minutes) {
+        return String.format(Locale.US, "%.2f h", minutes / 60.0);
+    }
+}
